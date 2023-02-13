@@ -4,7 +4,7 @@ Repository and Github Action for updating and releasing in Terraform Cloud
 
 ## Usage
 
-If you have a Terraform Workflow with the variable `my_docker_image`, and you would like to update the value on each commit to your repository, you can create a `.github/workflows/release.yml` that looks something like this:
+If you have a Terraform Workflow with the variable `my_docker_image`, and you would like to update the value on each commit to `main` in your repository, you can create a `.github/workflows/release.yml` that looks something like this:
 
 ```yaml
 name: Deploy
