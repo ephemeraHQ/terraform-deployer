@@ -1,0 +1,35 @@
+name: "XMTP Terraform Deployer"
+description: "Update a Terraform variable and then create/apply a new run"
+branding:
+  icon: x
+  color: purple
+inputs:
+  terraform-token:
+    description: "Terraform cloud token"
+    required: true
+  terraform-org:
+    description: "Terraform organization that contains the specified workspace"
+    required: true
+  terraform-workspace:
+    description: "Terraform Workspace to update and apply into"
+    required: true
+  variable-name:
+    description: "Terraform variable to update the value of"
+    required: true
+  variable-value:
+    description: "Value to set for the variable"
+    required: true
+  variable-value-required-prefix:
+    description: "Require the value specified in `variable-value` to have the supplied prefix"
+  run-title-override:
+    description: "The title of the terraform run. If not specified, defaults to latest commit message"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  env:
+    TERRAFORM_TOKEN: ${{ inputs.terraform-token }}
+    TERRAFORM_ORG: ${{ inputs.terraform-org }}
+    TERRAFORM_WORKSPACE: ${{ inputs.terraform-workspace }}
+    TERRAFORM_VARIABLE_NAME: ${{ inputs.terraform-variable-name }}
+    TERRAFORM_VARIABLE_VALUE: ${{ inputs.terraform-variable-value }}
+    TERRAFORM_RUN_TITLE: ${{ inputs.run-title-override }}
