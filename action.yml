@@ -32,4 +32,5 @@ runs:
     TERRAFORM_WORKSPACE: ${{ inputs.terraform-workspace }}
     TERRAFORM_VARIABLE_NAME: ${{ inputs.variable-name }}
     TERRAFORM_VARIABLE_VALUE: ${{ inputs.variable-value }}
+    VARIABLE_VALUE_REQUIRED_PREFIX: ${{ inputs.variable-value-required-prefix }}
     TERRAFORM_RUN_TITLE: ${{ inputs.run-title-override }}
