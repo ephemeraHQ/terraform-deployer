@@ -31,7 +31,7 @@ func main() {
 		log.Fatal("Invalid options", zap.Error(err))
 	}
 
-	runTitle, err := getRunTitle(opts)
+	runTitle, err := getRunTitle(opts, log)
 	if err != nil {
 		log.Fatal("Could not get run title", zap.Error(err))
 	}
@@ -67,13 +67,14 @@ func getDeployer(token, organization, workspace string, log *zap.Logger) (*deplo
 	})
 }
 
-func getRunTitle(opts options.Options) (string, error) {
+func getRunTitle(opts options.Options, log *zap.Logger) (string, error) {
 	if opts.RunTitle != "" {
 		return opts.RunTitle, nil
 	}
 
 	out, err := exec.Command("git", "log", "--oneline", "-n 1").Output()
 	if err != nil {
+		log.Error("git log failed", zap.String("output", string(out)))
 		return "", err
 	}
 
