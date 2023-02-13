@@ -30,6 +30,6 @@ runs:
     TERRAFORM_TOKEN: ${{ inputs.terraform-token }}
     TERRAFORM_ORG: ${{ inputs.terraform-org }}
     TERRAFORM_WORKSPACE: ${{ inputs.terraform-workspace }}
-    TERRAFORM_VARIABLE_NAME: ${{ inputs.terraform-variable-name }}
-    TERRAFORM_VARIABLE_VALUE: ${{ inputs.terraform-variable-value }}
+    TERRAFORM_VARIABLE_NAME: ${{ inputs.variable-name }}
+    TERRAFORM_VARIABLE_VALUE: ${{ inputs.variable-value }}
     TERRAFORM_RUN_TITLE: ${{ inputs.run-title-override }}
