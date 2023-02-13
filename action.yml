@@ -1,5 +1,8 @@
 name: "XMTP Terraform Deployer"
 description: "Update a Terraform variable and then create/apply a new run"
+branding:
+  icon: x
+  color: purple
 inputs:
   terraform-token:
     description: "Terraform cloud token"
