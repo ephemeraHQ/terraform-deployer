@@ -11,5 +11,5 @@ type Options struct {
 	RunTitle                    string        `long:"run-title" env:"TERRAFORM_RUN_TITLE" description:"Title for the Terraform Run. Defaults to latest commit message if unset."`
 	DryRun                      bool          `long:"dry-run" description:"Do not actually run the Terraform Run. Useful for testing."`
 	VariableValueRequiredPrefix string        `long:"variable-value-required-prefix" env:"VARIABLE_VALUE_REQUIRED_PREFIX" description:"If set, the VariableValue must start with this prefix"`
-	Timeout                     time.Duration `long:"timeout" description:"Run timeout" default:"0"`
+	Timeout                     time.Duration `long:"timeout" env:"TIMEOUT" description:"Run timeout" default:"0"`
 }

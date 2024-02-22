@@ -23,6 +23,8 @@ inputs:
     description: "Require the value specified in `variable-value` to have the supplied prefix"
   run-title-override:
     description: "The title of the terraform run. If not specified, defaults to latest commit message"
+  timeout:
+    description: "The timeout for the terraform run. If not specified, defaults to 15 minutes"
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -34,3 +36,4 @@ runs:
     TERRAFORM_VARIABLE_VALUE: ${{ inputs.variable-value }}
     VARIABLE_VALUE_REQUIRED_PREFIX: ${{ inputs.variable-value-required-prefix }}
     TERRAFORM_RUN_TITLE: ${{ inputs.run-title-override }}
+    TIMEOUT: ${{ inputs.timeout }}
