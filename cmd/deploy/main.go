@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/go-tfe"
 	"github.com/jessevdk/go-flags"
@@ -41,7 +42,7 @@ func main() {
 		return
 	}
 
-	deployer, err := getDeployer(opts.TFToken, opts.Organization, opts.Workspace, log)
+	deployer, err := getDeployer(opts.TFToken, opts.Organization, opts.Workspace, log, opts.Timeout)
 	if err != nil {
 		log.Fatal("Could not create deployer", zap.Error(err))
 	}
@@ -52,7 +53,7 @@ func main() {
 	}
 }
 
-func getDeployer(token, organization, workspace string, log *zap.Logger) (*deployer.Deployer, error) {
+func getDeployer(token, organization, workspace string, log *zap.Logger, timeout time.Duration) (*deployer.Deployer, error) {
 	tfc, err := tfe.NewClient(&tfe.Config{
 		Token: token,
 	})
@@ -64,6 +65,7 @@ func getDeployer(token, organization, workspace string, log *zap.Logger) (*deplo
 	return deployer.NewDeployer(context.Background(), log, tfc, &deployer.Config{
 		Organization: organization,
 		Workspace:    workspace,
+		WaitTimeout:  timeout,
 	})
 }
 
