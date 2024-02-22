@@ -25,6 +25,7 @@ inputs:
     description: "The title of the terraform run. If not specified, defaults to latest commit message"
   timeout:
     description: "The timeout for the terraform run. If not specified, defaults to 15 minutes"
+    default: "15m"
 runs:
   using: "docker"
   image: "Dockerfile"
