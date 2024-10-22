@@ -106,6 +106,9 @@ func (d *Deployer) runWait(runID string) error {
 		case tfe.RunApplied:
 			d.log.Info("success", zap.String("status", string(run.Status)))
 			return nil
+		case tfe.RunPlannedAndFinished:
+			d.log.Info("success", zap.String("status", string(run.Status)))
+			return nil
 		case tfe.RunErrored:
 			d.log.Info("failed", zap.String("status", string(run.Status)))
 			return fmt.Errorf("run failed with status %q", run.Status)
