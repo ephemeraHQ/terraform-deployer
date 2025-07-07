@@ -65,7 +65,9 @@ func TestDeployer_Deploy(t *testing.T) {
 				updateOpts := tfe.VariableUpdateOptions{
 					Value: stringPtr("new-var-value"),
 				}
-				mv.EXPECT().Update(gomock.Any(), "workspace-id", "var-id", updateOpts).Return(nil, nil)
+				mv.EXPECT().
+					Update(gomock.Any(), "workspace-id", "var-id", updateOpts).
+					Return(nil, nil)
 
 				mr.EXPECT().Create(gomock.Any(), tfe.RunCreateOptions{
 					Message:   stringPtr("commit"),
@@ -113,7 +115,9 @@ func TestDeployer_Deploy(t *testing.T) {
 				updateOpts := tfe.VariableUpdateOptions{
 					Value: stringPtr("new-var-value"),
 				}
-				mv.EXPECT().Update(gomock.Any(), "workspace-id", "var-id", updateOpts).Return(nil, nil)
+				mv.EXPECT().
+					Update(gomock.Any(), "workspace-id", "var-id", updateOpts).
+					Return(nil, nil)
 
 				mr.EXPECT().Create(gomock.Any(), tfe.RunCreateOptions{
 					Message:   stringPtr("commit"),
@@ -162,7 +166,9 @@ func TestDeployer_Deploy(t *testing.T) {
 				updateOpts := tfe.VariableUpdateOptions{
 					Value: stringPtr("new-var-value"),
 				}
-				mv.EXPECT().Update(gomock.Any(), "workspace-id", "var-id", updateOpts).Return(nil, nil)
+				mv.EXPECT().
+					Update(gomock.Any(), "workspace-id", "var-id", updateOpts).
+					Return(nil, nil)
 
 				mr.EXPECT().Create(gomock.Any(), tfe.RunCreateOptions{
 					Message:   stringPtr("commit"),
@@ -212,8 +218,9 @@ func TestDeployer_Deploy(t *testing.T) {
 			deployer, err := NewDeployer(ctx, log, tfc, tc.config)
 			require.NoError(t, err)
 			require.NotNil(t, deployer)
-
-			err = deployer.Deploy("var-key", "new-var-value", "commit")
+			err = deployer.Deploy(map[string]string{
+				"var-key": "new-var-value",
+			}, "commit")
 			tc.expect(t, err)
 		})
 	}
