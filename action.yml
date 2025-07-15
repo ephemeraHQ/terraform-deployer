@@ -14,10 +14,13 @@ inputs:
     description: "Terraform Workspace to update and apply into"
     required: true
   variable-name:
-    description: "Terraform variable to update the value of"
+    description: >
+      One or more Terraform variable names to update (comma-separated).
+      Must match the number and order of entries in variable-value.
     required: true
   variable-value:
-    description: "Value to set for the variable"
+    description: >
+      One or more values to set for each variable (comma-separated, same order as variable-name).
     required: true
   variable-value-required-prefix:
     description: "Require the value specified in `variable-value` to have the supplied prefix"

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os/exec"
 	"strings"
 	"time"
@@ -27,6 +28,7 @@ func main() {
 		}
 		return
 	}
+
 	err = validateOptions(opts)
 	if err != nil {
 		log.Fatal("Invalid options", zap.Error(err))
@@ -42,22 +44,30 @@ func main() {
 		return
 	}
 
+	vars := make(map[string]string)
+	for i := range opts.VariableName {
+		vars[opts.VariableName[i]] = opts.VariableValue[i]
+	}
+
 	deployer, err := getDeployer(opts.TFToken, opts.Organization, opts.Workspace, log, opts.Timeout)
 	if err != nil {
 		log.Fatal("Could not create deployer", zap.Error(err))
 	}
 
-	err = deployer.Deploy(opts.VariableName, opts.VariableValue, runTitle)
+	err = deployer.Deploy(vars, runTitle)
 	if err != nil {
 		log.Fatal("Could not deploy", zap.Error(err))
 	}
 }
 
-func getDeployer(token, organization, workspace string, log *zap.Logger, timeout time.Duration) (*deployer.Deployer, error) {
+func getDeployer(
+	token, organization, workspace string,
+	log *zap.Logger,
+	timeout time.Duration,
+) (*deployer.Deployer, error) {
 	tfc, err := tfe.NewClient(&tfe.Config{
 		Token: token,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -85,23 +95,35 @@ func getRunTitle(opts options.Options, log *zap.Logger) (string, error) {
 
 func validateOptions(opts options.Options) error {
 	if opts.TFToken == "" {
-		return errors.New("Terraform token is required")
+		return errors.New("terraform token is required")
 	}
 	if opts.Workspace == "" {
-		return errors.New("Workspace is required")
+		return errors.New("workspace is required")
 	}
 	if opts.Organization == "" {
-		return errors.New("Organization is required")
+		return errors.New("organization is required")
 	}
-	if opts.VariableName == "" {
-		return errors.New("Variable name is required")
+
+	if len(opts.VariableName) == 0 {
+		return errors.New("at least one variable name is required")
 	}
-	if opts.VariableValue == "" {
-		return errors.New("Variable value is required")
+	if len(opts.VariableValue) == 0 {
+		return errors.New("at least one variable value is required")
 	}
+
+	if len(opts.VariableValue) != len(opts.VariableName) {
+		return errors.New("variable name and value must be the same length")
+	}
+
 	if opts.VariableValueRequiredPrefix != "" {
-		if !strings.HasPrefix(opts.VariableValue, opts.VariableValueRequiredPrefix) {
-			return errors.New("Variable value does not start with required prefix")
+		for i, val := range opts.VariableValue {
+			if !strings.HasPrefix(val, opts.VariableValueRequiredPrefix) {
+				return fmt.Errorf(
+					"variable %s:%s does not start with required prefix",
+					opts.VariableName[i],
+					val,
+				)
+			}
 		}
 	}
 

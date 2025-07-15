@@ -31,10 +31,18 @@ type Deployer struct {
 	wsp    *tfe.Workspace
 }
 
-func NewDeployer(ctx context.Context, log *zap.Logger, tfc *tfe.Client, config *Config) (*Deployer, error) {
+func NewDeployer(
+	ctx context.Context,
+	log *zap.Logger,
+	tfc *tfe.Client,
+	config *Config,
+) (*Deployer, error) {
 	wsp, err := tfc.Workspaces.Read(ctx, config.Organization, config.Workspace)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("getting workspace %s/%s", config.Organization, config.Workspace))
+		return nil, errors.Wrap(
+			err,
+			fmt.Sprintf("getting workspace %s/%s", config.Organization, config.Workspace),
+		)
 	}
 
 	if config.WaitTimeout == 0 {
@@ -53,10 +61,12 @@ func NewDeployer(ctx context.Context, log *zap.Logger, tfc *tfe.Client, config *
 	}, nil
 }
 
-func (d *Deployer) Deploy(varKey, varValue, msg string) error {
-	err := d.updateVar(varKey, varValue)
-	if err != nil {
-		return errors.Wrap(err, "updating variable")
+func (d *Deployer) Deploy(vars map[string]string, msg string) error {
+	for key, value := range vars {
+		err := d.updateVar(key, value)
+		if err != nil {
+			return errors.Wrapf(err, "updating variable %s", key)
+		}
 	}
 
 	run, err := d.tfe.Runs.Create(d.ctx, tfe.RunCreateOptions{
@@ -84,7 +94,12 @@ func (d *Deployer) updateVar(name string, value string) error {
 
 	for _, v := range vars.Items {
 		if v.Key == name {
-			_, err := d.tfe.Variables.Update(d.ctx, d.wsp.ID, v.ID, tfe.VariableUpdateOptions{Value: &value})
+			_, err := d.tfe.Variables.Update(
+				d.ctx,
+				d.wsp.ID,
+				v.ID,
+				tfe.VariableUpdateOptions{Value: &value},
+			)
 			if err != nil {
 				return errors.Wrap(err, fmt.Sprintf("updating variable %s", name))
 			}
